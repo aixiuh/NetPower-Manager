@@ -33,20 +33,6 @@ def wake_up(device_id):
     flash(message, "success" if success else "error")
     return redirect(url_for('devices.index'))
 
-@device_bp.route('/wake_all', methods=['POST'])
-@handle_errors
-def wake_all():
-    """批量唤醒设备"""
-    selected_ids = request.form.getlist('selected_devices')
-    if not selected_ids:
-        flash("未选择任何设备", "error")
-        return redirect(url_for('devices.index'))
-    
-    device_ids = [int(id) for id in selected_ids if id.isdigit()]
-    success, message = PowerService.wake_multiple_devices(device_ids)
-    flash(message, "success" if success else "error")
-    return redirect(url_for('devices.index'))
-
 @device_bp.route('/add_device', methods=['POST'])
 @handle_errors
 def add_device():
@@ -87,20 +73,6 @@ def update_device(device_id):
 def delete_device(device_id):
     """删除设备"""
     success, message = DeviceService.delete_device(device_id)
-    flash(message, "success" if success else "error")
-    return redirect(url_for('devices.index'))
-
-@device_bp.route('/delete_selected', methods=['POST'])
-@handle_errors
-def delete_selected():
-    """批量删除设备"""
-    selected_ids = request.form.getlist('selected_devices')
-    if not selected_ids:
-        flash("未选择任何设备", "error")
-        return redirect(url_for('devices.index'))
-    
-    device_ids = [int(id) for id in selected_ids if id.isdigit()]
-    success, message = DeviceService.delete_multiple_devices(device_ids)
     flash(message, "success" if success else "error")
     return redirect(url_for('devices.index'))
 

@@ -3,70 +3,87 @@
 {% block title %}设备管理 - Wake on LAN{% endblock %}
 
 {% block content %}
-<div class="add-device">
-    <h2>添加设备</h2>
-    <form action="{{ url_for('devices.add_device') }}" method="post" id="add-form" data-validate="true">
-        <label for="name">名称:</label>
-        <input type="text" name="name" required placeholder="输入设备名称">
-        <label for="mac">MAC地址:</label>
-        <input type="text" name="mac" required placeholder="格式: 00:11:22:33:44:55">
-        <label for="ip">IP地址:</label>
-        <input type="text" name="ip" required placeholder="格式: 192.168.1.100">
-        <button type="submit">添加设备</button>
-    </form>
-</div>
+<div class="dashboard">
+    <div class="section-header">
+        <h2>添加设备</h2>
+        <button id="toggle-add-form" class="toggle-btn">
+            <span class="toggle-icon">+</span>
+        </button>
+    </div>
 
-<div class="devices">
-    <div class="devices-header">
+    <div class="add-device" id="add-device-form">
+        <form action="{{ url_for('devices.add_device') }}" method="post" id="add-form" data-validate="true">
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="name">名称</label>
+                    <input type="text" name="name" required placeholder="输入设备名称">
+                </div>
+                <div class="form-group">
+                    <label for="mac">MAC地址</label>
+                    <input type="text" name="mac" required placeholder="格式: 00:11:22:33:44:55">
+                </div>
+                <div class="form-group">
+                    <label for="ip">IP地址</label>
+                    <input type="text" name="ip" required placeholder="格式: 192.168.1.100">
+                </div>
+                <div class="form-group">
+                    <button type="submit" class="btn-primary">添加设备</button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <div class="section-header devices-header">
         <h2>设备列表</h2>
-        <a href="{{ url_for('devices.refresh_status') }}" class="refresh-btn">刷新状态</a>
+        <a href="{{ url_for('devices.refresh_status') }}" class="refresh-btn">
+            <span class="refresh-icon">⟳</span> 刷新状态
+        </a>
     </div>
     
     {% if devices %}
-    <form id="batch-actions-form" method="post">
-        <div class="batch-actions">
-            <button type="submit" formaction="{{ url_for('devices.wake_all') }}">唤醒选中</button>
-            <button type="submit" formaction="{{ url_for('devices.delete_selected') }}" class="delete-btn">删除选中</button>
-        </div>
-        <table class="devices-table">
-            <thead>
-                <tr>
-                    <th><input type="checkbox" id="select-all"></th>
-                    <th>名称</th>
-                    <th>MAC地址</th>
-                    <th>IP地址</th>
-                    <th>状态</th>
-                    <th>操作</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for index in range(devices|length) %}
-                    {% set device = devices[index] %}
-                    <tr>
-                        <td><input type="checkbox" name="selected_devices" value="{{ index }}" class="device-checkbox"></td>
-                        <td>{{ device.name }}</td>
-                        <td>{{ device.mac }}</td>
-                        <td>{{ device.ip }}</td>
-                        <td>
-                            <div class="status-indicator">
-                                <div class="status-dot {{ 'green' if device.status else 'red' }}"></div>
-                                <span>{{ '在线' if device.status else '离线' }}</span>
+        <div class="device-grid">
+            {% for index in range(devices|length) %}
+                {% set device = devices[index] %}
+                <div class="device-card">
+                    <div class="device-card-header">
+                        <h3>{{ device.name }}</h3>
+                        <div class="status-badge {{ 'online' if device.status else 'offline' }}">
+                            {{ '在线' if device.status else '离线' }}
+                        </div>
+                    </div>
+                    <div class="device-card-body">
+                        <div class="device-info">
+                            <div class="info-item">
+                                <span class="info-label">MAC:</span>
+                                <span class="info-value">{{ device.mac }}</span>
                             </div>
-                        </td>
-                        <td class="actions-cell">
-                            <a href="{{ url_for('devices.wake_up', device_id=index) }}" class="action-btn wake-btn">唤醒</a>
-                            <a href="{{ url_for('devices.edit_device_page', device_id=index) }}" class="action-btn edit-btn">编辑</a>
-                            <button type="button" class="action-btn delete-btn" onclick="confirmDelete({{ index }})">删除</button>
-                        </td>
-                    </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    </form>
+                            <div class="info-item">
+                                <span class="info-label">IP:</span>
+                                <span class="info-value">{{ device.ip }}</span>
+                            </div>
+                        </div>
+                        <div class="device-actions">
+                            <a href="{{ url_for('devices.wake_up', device_id=index) }}" class="action-btn wake-btn" title="唤醒设备">
+                                <span class="btn-icon">▶</span> 唤醒
+                            </a>
+                            <a href="{{ url_for('devices.edit_device_page', device_id=index) }}" class="action-btn edit-btn" title="编辑设备">
+                                <span class="btn-icon">✎</span> 编辑
+                            </a>
+                            <button type="button" class="action-btn delete-btn" onclick="confirmDelete({{ index }})" title="删除设备">
+                                <span class="btn-icon">✕</span> 删除
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
     {% else %}
-    <div class="no-devices">
-        <p>没有设备。请添加设备开始使用。</p>
-    </div>
+        <div class="no-devices">
+            <div class="empty-state">
+                <div class="empty-icon">📦</div>
+                <p>没有设备。请添加设备开始使用。</p>
+            </div>
+        </div>
     {% endif %}
 </div>
 {% endblock %}
@@ -74,8 +91,13 @@
 {% block modals %}
 <div id="deleteModal" class="modal">
     <div class="modal-content">
-        <h3>确认删除</h3>
-        <p>您确定要删除这个设备吗？此操作不可撤销。</p>
+        <div class="modal-header">
+            <h3>确认删除</h3>
+            <span class="close-modal" onclick="closeModal()">&times;</span>
+        </div>
+        <div class="modal-body"></div>
+            <p>您确定要删除这个设备吗？此操作不可撤销。</p>
+        </div>
         <div class="modal-buttons">
             <button class="cancel-btn" onclick="closeModal()">取消</button>
             <a id="confirmDeleteLink" href="#"><button class="delete-btn">删除</button></a>
@@ -102,4 +124,25 @@ window.onclick = function(event) {
         modal.style.display = "none";
     }
 }
+
+// 切换添加设备表单显示/隐藏
+document.getElementById('toggle-add-form').addEventListener('click', function() {
+    var form = document.getElementById('add-device-form');
+    var icon = this.querySelector('.toggle-icon');
+    
+    if (form.classList.contains('expanded')) {
+        form.classList.remove('expanded');
+        icon.textContent = '+';
+    } else {
+        form.classList.add('expanded');
+        icon.textContent = '−';
+    }
+});
+
+// 页面加载时展开添加设备表单
+document.addEventListener('DOMContentLoaded', function() {
+    var form = document.getElementById('add-device-form');
+    form.classList.add('expanded');
+    document.getElementById('toggle-add-form').querySelector('.toggle-icon').textContent = '−';
+});
 {% endblock %}

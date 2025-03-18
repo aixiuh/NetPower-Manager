@@ -43,7 +43,6 @@ function setupFlashMessages(timeout = 5000) {
 document.addEventListener('DOMContentLoaded', function() {
     setupFlashMessages();
     setupFormValidation();
-    setupSelectAll();
 });
 
 // 设置表单验证
@@ -65,16 +64,4 @@ function setupFormValidation() {
             }
         });
     });
-}
-
-// 设置全选/取消全选功能
-function setupSelectAll() {
-    const selectAllCheckbox = document.getElementById('select-all');
-    if (selectAllCheckbox) {
-        selectAllCheckbox.addEventListener('change', function() {
-            document.querySelectorAll('.device-checkbox').forEach(checkbox => {
-                checkbox.checked = this.checked;
-            });
-        });
-    }
 }

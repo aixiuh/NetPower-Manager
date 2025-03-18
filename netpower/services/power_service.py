@@ -19,24 +19,3 @@ class PowerService:
             except Exception as e:
                 return False, f"发送唤醒信号失败: {str(e)}"
         return False, "设备不存在"
-    
-    @staticmethod
-    def wake_multiple_devices(device_ids):
-        """批量唤醒设备"""
-        if not device_ids:
-            return False, "未选择任何设备"
-        
-        devices = DeviceService.get_devices()
-        success_count = 0
-        
-        for device_id in device_ids:
-            if 0 <= device_id < len(devices):
-                try:
-                    send_magic_packet(devices[device_id].mac)
-                    success_count += 1
-                except:
-                    pass
-        
-        if success_count > 0:
-            return True, f"已向选中的 {success_count} 个设备发送唤醒信号"
-        return False, "发送唤醒信号失败"
