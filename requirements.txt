@@ -1,0 +1,13 @@
+# 应用依赖列表
+
+# Web框架
+flask==2.3.3
+
+# 唤醒功能
+wakeonlan==3.0.0
+
+# 远程控制（未来功能）
+paramiko==3.3.1
+
+# 工具库
+python-dotenv==1.0.0

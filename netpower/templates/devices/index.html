@@ -1,0 +1,158 @@
+{% extends "base.html" %}
+
+{% block title %}设备管理 - Wake on LAN{% endblock %}
+
+{% block content %}
+<div class="add-device">
+    <h2>添加设备</h2>
+    <form action="{{ url_for('devices.add_device') }}" method="post" id="add-form">
+        <label for="name">名称:</label>
+        <input type="text" name="name" required placeholder="输入设备名称">
+        <label for="mac">MAC地址:</label>
+        <input type="text" name="mac" required placeholder="格式: 00:11:22:33:44:55">
+        <label for="ip">IP地址:</label>
+        <input type="text" name="ip" required placeholder="格式: 192.168.1.100">
+        <button type="submit">添加设备</button>
+    </form>
+</div>
+
+<div class="devices">
+    <div class="devices-header">
+        <h2>设备列表</h2>
+        <a href="{{ url_for('devices.refresh_status') }}" class="refresh-btn">刷新状态</a>
+    </div>
+    
+    {% if devices %}
+    <form id="batch-actions-form" method="post">
+        <div class="batch-actions">
+            <button type="submit" formaction="{{ url_for('devices.wake_all') }}">唤醒选中</button>
+            <button type="submit" formaction="{{ url_for('devices.delete_selected') }}" class="delete-btn">删除选中</button>
+        </div>
+        <table class="devices-table">
+            <thead>
+                <tr>
+                    <th><input type="checkbox" id="select-all"></th>
+                    <th>名称</th>
+                    <th>MAC地址</th>
+                    <th>IP地址</th>
+                    <th>状态</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for index in range(devices|length) %}
+                    {% set device = devices[index] %}
+                    <tr>
+                        <td><input type="checkbox" name="selected_devices" value="{{ index }}" class="device-checkbox"></td>
+                        <td>{{ device.name }}</td>
+                        <td>{{ device.mac }}</td>
+                        <td>{{ device.ip }}</td>
+                        <td>
+                            {% if device.status %}
+                                <div class="status-indicator">
+                                    <div class="status-dot green"></div>
+                                    <span>在线</span>
+                                </div>
+                            {% else %}
+                                <div class="status-indicator">
+                                    <div class="status-dot red"></div>
+                                    <span>离线</span>
+                                </div>
+                            {% endif %}
+                        </td>
+                        <td class="actions-cell">
+                            <a href="{{ url_for('devices.wake_up', device_id=index) }}" class="action-btn wake-btn">唤醒</a>
+                            <a href="{{ url_for('devices.edit_device_page', device_id=index) }}" class="action-btn edit-btn">编辑</a>
+                            <button type="button" class="action-btn delete-btn" onclick="confirmDelete({{ index }})">删除</button>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </form>
+    {% else %}
+    <div class="no-devices">
+        <p>没有设备。请添加设备开始使用。</p>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
+
+{% block modals %}
+<!-- 删除确认对话框 -->
+<div id="deleteModal" class="modal">
+    <div class="modal-content">
+        <h3>确认删除</h3>
+        <p>您确定要删除这个设备吗？此操作不可撤销。</p>
+        <div class="modal-buttons">
+            <button class="cancel-btn" onclick="closeModal()">取消</button>
+            <a id="confirmDeleteLink" href="#"><button class="delete-btn">删除</button></a>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+// 删除确认对话框逻辑
+function confirmDelete(deviceId) {
+    var modal = document.getElementById('deleteModal');
+    var confirmLink = document.getElementById('confirmDeleteLink');
+    confirmLink.href = "{{ url_for('devices.delete_device', device_id=0) }}".replace("0", deviceId);
+    modal.style.display = "block";
+}
+
+function closeModal() {
+    var modal = document.getElementById('deleteModal');
+    modal.style.display = "none";
+}
+
+// 点击对话框外部关闭对话框
+window.onclick = function(event) {
+    var modal = document.getElementById('deleteModal');
+    if (event.target == modal) {
+        modal.style.display = "none";
+    }
+}
+
+// 全选/取消全选
+document.getElementById('select-all').addEventListener('change', function() {
+    var checkboxes = document.querySelectorAll('.device-checkbox');
+    for (var i = 0; i < checkboxes.length; i++) {
+        checkboxes[i].checked = this.checked;
+    }
+});
+
+// 表单验证
+document.getElementById('add-form').addEventListener('submit', function(event) {
+    const name = document.querySelector('input[name="name"]').value;
+    const mac = document.querySelector('input[name="mac"]').value;
+    const ip = document.querySelector('input[name="ip"]').value;
+    
+    // MAC地址格式验证
+    const macPattern = /^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$/;
+    if (!macPattern.test(mac)) {
+        alert('MAC地址格式无效。请使用格式：00:11:22:33:44:55');
+        event.preventDefault();
+        return;
+    }
+    
+    // IP地址格式验证
+    const ipPattern = /^(\d{1,3}\.){3}\d{1,3}$/;
+    if (!ipPattern.test(ip)) {
+        alert('IP地址格式无效。请使用格式：192.168.1.100');
+        event.preventDefault();
+        return;
+    }
+    
+    // 验证IP地址范围
+    const ipParts = ip.split('.');
+    for (let part of ipParts) {
+        const num = parseInt(part);
+        if (num < 0 || num > 255) {
+            alert('IP地址中的数字必须在0-255之间');
+            event.preventDefault();
+            return;
+        }
+    }
+});
+{% endblock %}

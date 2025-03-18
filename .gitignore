@@ -1,0 +1,118 @@
+# 忽略Python编译文件
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# 忽略虚拟环境
+venv/
+ENV/
+.env
+.venv
+env/
+virtualenv/
+pythonenv*
+
+# 忽略IDE文件
+.idea/
+.vscode/
+*.swp
+*.swo
+.project
+.pydevproject
+.settings/
+*.sublime-workspace
+*.sublime-project
+.spyderproject
+.spyproject
+.ropeproject
+.suo
+.ntvs*
+.njsproj
+.sln
+.sw?
+.classpath
+
+# 忽略数据文件但保留目录
+data/*
+!data/.gitkeep
+
+# 忽略日志文件和目录
+logs/*
+!logs/.gitkeep
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+
+# 忽略系统文件
+.DS_Store
+Thumbs.db
+.directory
+desktop.ini
+*.lnk
+$RECYCLE.BIN/
+ehthumbs.db
+ehthumbs_vista.db
+.fuse_hidden*
+.Trash-*
+.nfs*
+
+# 忽略临时文件
+*.tmp
+*.bak
+*.swp
+*~
+tmp/
+temp/
+.coverage
+htmlcov/
+coverage.xml
+.pytest_cache/
+nosetests.xml
+.tox/
+.hypothesis/
+
+# 忽略本地配置文件
+.local/
+local_settings.py
+instance/
+*.cfg
+*.ini
+!setup.cfg
+
+# 忽略包管理器相关文件
+node_modules/
+bower_components/
+package-lock.json
+yarn.lock
+pip-log.txt
+pipfile.lock
+
+# 忽略数据库文件
+*.sqlite
+*.sqlite3
+*.db
+
+# 忽略编译后的前端资源
+*.min.css
+*.min.js
+public/
+dist/
