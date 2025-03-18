@@ -10,7 +10,7 @@ class PowerService:
     @staticmethod
     def wake_device(device_id):
         """唤醒单个设备"""
-        devices = DeviceService.load_devices()
+        devices = DeviceService.get_devices()
         if 0 <= device_id < len(devices):
             device = devices[device_id]
             try:
@@ -26,7 +26,7 @@ class PowerService:
         if not device_ids:
             return False, "未选择任何设备"
         
-        devices = DeviceService.load_devices()
+        devices = DeviceService.get_devices()
         success_count = 0
         
         for device_id in device_ids:

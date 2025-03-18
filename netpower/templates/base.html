@@ -31,15 +31,8 @@
     
     {% block modals %}{% endblock %}
     
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
     <script>
-        // 自动关闭闪现消息
-        setTimeout(function() {
-            var flashMessages = document.querySelectorAll('.flash-message');
-            for (var i = 0; i < flashMessages.length; i++) {
-                flashMessages[i].style.display = 'none';
-            }
-        }, 5000);
-        
         {% block scripts %}{% endblock %}
     </script>
 </body>

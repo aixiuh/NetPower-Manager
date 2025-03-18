@@ -64,36 +64,5 @@
 应用程序将设备信息存储在`data/devices.json`文件中。该文件会自动创建和管理。
 
 ## 项目结构
-```
-netpower-manager/
-├── app/
-│   ├── controllers/
-│   │   └── device_controller.py
-│   ├── models/
-│   │   └── device.py
-│   ├── services/
-│   │   ├── power_service.py
-│   │   └── status_service.py
-│   ├── static/
-│   │   ├── css/
-│   │   ├── js/
-│   │   └── img/
-│   ├── templates/
-│   │   ├── base.html
-│   │   ├── index.html
-│   │   └── edit_device.html
-│   └── __init__.py
-├── config/
-│   ├── devices.json
-│   └── config.py
-├── run.py
-└── README.md
-```
-
-## 贡献
-欢迎贡献该项目。无论是修复bug、改进文档，还是添加新功能，您的贡献都将受到欢迎。
-
-## 许可证
-该项目根据MIT许可证授权。
 
 
