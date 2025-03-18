@@ -48,14 +48,11 @@ class Device:
     @staticmethod
     def is_valid_mac(mac):
         """验证MAC地址格式"""
-        pattern = re.compile(r'^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$')
-        return bool(pattern.match(mac))
+        return bool(re.match(r'^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$', mac))
     
     @staticmethod
     def is_valid_ip(ip):
         """验证IP地址格式"""
-        pattern = re.compile(r'^(\d{1,3}\.){3}\d{1,3}$')
-        if not pattern.match(ip):
+        if not re.match(r'^(\d{1,3}\.){3}\d{1,3}$', ip):
             return False
-        # 验证每个数字在0-255之间
         return all(0 <= int(num) <= 255 for num in ip.split('.'))

@@ -17,8 +17,7 @@ def create_app(config_name=None):
     # 确保数据和日志目录存在
     for directory in [os.path.dirname(app.config['DATA_FILE']), 
                      os.path.dirname(app.config['LOG_FILE'])]:
-        if not os.path.exists(directory):
-            os.makedirs(directory)
+        os.makedirs(directory, exist_ok=True)
     
     # 设置日志
     handler = RotatingFileHandler(
@@ -34,13 +33,9 @@ def create_app(config_name=None):
     
     # 注册蓝图
     from netpower.views.devices import device_bp
-    from netpower.views.errors import error_bp, page_not_found, internal_server_error
+    from netpower.views.errors import error_bp
     
     app.register_blueprint(device_bp)
     app.register_blueprint(error_bp)
-    
-    # 设置错误处理
-    app.register_error_handler(404, page_not_found)
-    app.register_error_handler(500, internal_server_error)
     
     return app

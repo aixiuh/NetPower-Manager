@@ -1,6 +1,5 @@
 /**
  * 主JavaScript文件
- * 包含通用的客户端功能
  */
 
 // 确认删除操作
@@ -21,7 +20,6 @@ function isValidIp(ip) {
         return false;
     }
     
-    // 验证IP地址范围
     const parts = ip.split('.');
     for (let part of parts) {
         const num = parseInt(part, 10);
@@ -35,8 +33,7 @@ function isValidIp(ip) {
 // 设置闪现消息自动关闭
 function setupFlashMessages(timeout = 5000) {
     setTimeout(function() {
-        const flashMessages = document.querySelectorAll('.flash-message');
-        flashMessages.forEach(message => {
+        document.querySelectorAll('.flash-message').forEach(message => {
             message.style.display = 'none';
         });
     }, timeout);
@@ -44,23 +41,15 @@ function setupFlashMessages(timeout = 5000) {
 
 // DOM加载完成后执行
 document.addEventListener('DOMContentLoaded', function() {
-    // 设置闪现消息自动关闭
     setupFlashMessages();
-    
-    // 设置表单验证
     setupFormValidation();
-    
-    // 设置全选/取消全选功能
     setupSelectAll();
 });
 
 // 设置表单验证
 function setupFormValidation() {
-    const forms = document.querySelectorAll('form[data-validate="true"]');
-    
-    forms.forEach(form => {
+    document.querySelectorAll('form[data-validate="true"]').forEach(form => {
         form.addEventListener('submit', function(event) {
-            // MAC地址验证
             const macInput = this.querySelector('input[name="mac"]');
             if (macInput && !isValidMac(macInput.value)) {
                 alert('MAC地址格式无效。请使用格式：00:11:22:33:44:55');
@@ -68,7 +57,6 @@ function setupFormValidation() {
                 return;
             }
             
-            // IP地址验证
             const ipInput = this.querySelector('input[name="ip"]');
             if (ipInput && !isValidIp(ipInput.value)) {
                 alert('IP地址格式无效或范围错误。请使用格式：192.168.1.100');
@@ -84,8 +72,7 @@ function setupSelectAll() {
     const selectAllCheckbox = document.getElementById('select-all');
     if (selectAllCheckbox) {
         selectAllCheckbox.addEventListener('change', function() {
-            const checkboxes = document.querySelectorAll('.device-checkbox');
-            checkboxes.forEach(checkbox => {
+            document.querySelectorAll('.device-checkbox').forEach(checkbox => {
                 checkbox.checked = this.checked;
             });
         });

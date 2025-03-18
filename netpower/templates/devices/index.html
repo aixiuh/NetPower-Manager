@@ -48,17 +48,10 @@
                         <td>{{ device.mac }}</td>
                         <td>{{ device.ip }}</td>
                         <td>
-                            {% if device.status %}
-                                <div class="status-indicator">
-                                    <div class="status-dot green"></div>
-                                    <span>在线</span>
-                                </div>
-                            {% else %}
-                                <div class="status-indicator">
-                                    <div class="status-dot red"></div>
-                                    <span>离线</span>
-                                </div>
-                            {% endif %}
+                            <div class="status-indicator">
+                                <div class="status-dot {{ 'green' if device.status else 'red' }}"></div>
+                                <span>{{ '在线' if device.status else '离线' }}</span>
+                            </div>
                         </td>
                         <td class="actions-cell">
                             <a href="{{ url_for('devices.wake_up', device_id=index) }}" class="action-btn wake-btn">唤醒</a>
@@ -79,7 +72,6 @@
 {% endblock %}
 
 {% block modals %}
-<!-- 删除确认对话框 -->
 <div id="deleteModal" class="modal">
     <div class="modal-content">
         <h3>确认删除</h3>
@@ -93,7 +85,6 @@
 {% endblock %}
 
 {% block scripts %}
-// 删除确认对话框逻辑
 function confirmDelete(deviceId) {
     var modal = document.getElementById('deleteModal');
     var confirmLink = document.getElementById('confirmDeleteLink');
@@ -102,23 +93,13 @@ function confirmDelete(deviceId) {
 }
 
 function closeModal() {
-    var modal = document.getElementById('deleteModal');
-    modal.style.display = "none";
+    document.getElementById('deleteModal').style.display = "none";
 }
 
-// 点击对话框外部关闭对话框
 window.onclick = function(event) {
     var modal = document.getElementById('deleteModal');
     if (event.target == modal) {
         modal.style.display = "none";
     }
 }
-
-// 全选/取消全选
-document.getElementById('select-all').addEventListener('change', function() {
-    var checkboxes = document.querySelectorAll('.device-checkbox');
-    for (var i = 0; i < checkboxes.length; i++) {
-        checkboxes[i].checked = this.checked;
-    }
-});
 {% endblock %}
