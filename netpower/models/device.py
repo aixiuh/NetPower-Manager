@@ -47,8 +47,33 @@ class Device:
     
     @staticmethod
     def is_valid_mac(mac):
-        """验证MAC地址格式"""
-        return bool(re.match(r'^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$', mac))
+        """验证MAC地址格式
+        
+        支持多种格式的MAC地址:
+        - 带冒号分隔: AA:BB:CC:DD:EE:FF
+        - 带连字符分隔: AA-BB-CC-DD-EE-FF
+        - 带点分隔: AABB.CCDD.EEFF
+        - 无分隔符: AABBCCDDEEFF
+        
+        返回:
+            bool: MAC地址格式是否有效
+        """
+        # 去除前后空白字符
+        mac = mac.strip() if mac else ""
+        
+        # 各种MAC地址格式的正则表达式
+        patterns = [
+            r'^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$',           # AA:BB:CC:DD:EE:FF 或 AA-BB-CC-DD-EE-FF
+            r'^([0-9A-Fa-f]{4}\.){2}([0-9A-Fa-f]{4})$',             # AABB.CCDD.EEFF
+            r'^([0-9A-Fa-f]{12})$'                                  # AABBCCDDEEFF
+        ]
+        
+        # 检查是否符合任一格式
+        for pattern in patterns:
+            if re.match(pattern, mac):
+                return True
+                
+        return False
     
     @staticmethod
     def is_valid_ip(ip):

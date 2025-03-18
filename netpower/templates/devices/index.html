@@ -95,7 +95,7 @@
             <h3>确认删除</h3>
             <span class="close-modal" onclick="closeModal()">&times;</span>
         </div>
-        <div class="modal-body"></div>
+        <div class="modal-body">
             <p>您确定要删除这个设备吗？此操作不可撤销。</p>
         </div>
         <div class="modal-buttons">
@@ -141,8 +141,7 @@ document.getElementById('toggle-add-form').addEventListener('click', function() 
 
 // 页面加载时展开添加设备表单
 document.addEventListener('DOMContentLoaded', function() {
-    var form = document.getElementById('add-device-form');
-    form.classList.add('expanded');
-    document.getElementById('toggle-add-form').querySelector('.toggle-icon').textContent = '−';
+    document.querySelector('.add-device').classList.add('expanded');
+    document.querySelector('.toggle-icon').textContent = '−';
 });
 {% endblock %}
