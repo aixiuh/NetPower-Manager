@@ -31,6 +31,10 @@ def create_app(config_name=None):
     app.logger.addHandler(handler)
     app.logger.setLevel(app.config['LOG_LEVEL'])
     
+    # 注册辅助函数
+    from netpower.helpers import register_helpers
+    register_helpers(app)
+    
     # 注册蓝图
     from netpower.views.devices import device_bp
     from netpower.views.errors import error_bp

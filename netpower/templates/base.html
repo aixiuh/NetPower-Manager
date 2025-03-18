@@ -3,31 +3,34 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/modern.css') }}">
+    <!-- 使用Pico.css - 一个极简的CSS框架 -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
     <title>{% block title %}Wake on LAN{% endblock %}</title>
     {% block head %}{% endblock %}
 </head>
 <body>
-    <div class="container">
-        <div class="banner">
+    <main class="container">
+        <header>
             <h1>{% block header %}Wake on LAN{% endblock %}</h1>
-        </div>
+        </header>
 
         <!-- 闪现消息区域 -->
         {% with messages = get_flashed_messages(with_categories=true) %}
             {% if messages %}
                 {% for category, message in messages %}
-                    <div class="flash-message {{ category }}">
+                    <article class="flash-message {{ category }}">
                         {{ message }}
-                        <span class="close-btn" onclick="this.parentElement.style.display='none';">&times;</span>
-                    </div>
+                        <button class="close-btn secondary outline" 
+                                onclick="this.parentElement.style.display='none';">×</button>
+                    </article>
                 {% endfor %}
             {% endif %}
         {% endwith %}
 
         {% block content %}{% endblock %}
-    </div>
+    </main>
     
     {% block modals %}{% endblock %}
     

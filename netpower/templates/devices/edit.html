@@ -4,20 +4,28 @@
 {% block header %}编辑设备{% endblock %}
 
 {% block content %}
-<div class="edit-device">
-    <h2>更新设备信息</h2>
-    <form action="{{ url_for('devices.update_device', device_id=device_id) }}" method="post" id="edit-form" data-validate="true">
-        <label for="name">名称:</label>
-        <input type="text" name="name" value="{{ device.name }}" required>
-        <label for="mac">MAC地址:</label>
-        <input type="text" name="mac" value="{{ device.mac }}" required>
-        <label for="ip">IP地址:</label>
-        <input type="text" name="ip" value="{{ device.ip }}" required>
+<article>
+    <header>
+        <h2>更新设备信息</h2>
+    </header>
+    
+    <form action="{{ url_for('devices.update_device', device_id=device_id) }}" method="post" data-validate="true">
+        <label for="name">名称
+            <input type="text" name="name" value="{{ device.name }}" required>
+        </label>
         
-        <div class="form-buttons">
-            <button type="submit" class="primary-btn">更新设备</button>
-            <a href="{{ url_for('devices.index') }}" class="secondary-btn">取消</a>
+        <label for="mac">MAC地址
+            <input type="text" name="mac" value="{{ device.mac }}" required>
+        </label>
+        
+        <label for="ip">IP地址
+            <input type="text" name="ip" value="{{ device.ip }}" required>
+        </label>
+        
+        <div class="grid">
+            <button type="submit">更新设备</button>
+            <a href="{{ url_for('devices.index') }}" role="button" class="secondary outline">取消</a>
         </div>
     </form>
-</div>
+</article>
 {% endblock %}

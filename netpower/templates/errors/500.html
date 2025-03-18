@@ -4,9 +4,13 @@
 {% block header %}500 - 服务器错误{% endblock %}
 
 {% block content %}
-<div class="error-container">
-    <h2>服务器内部错误</h2>
+<article class="container">
+    <header>
+        <h2>服务器内部错误</h2>
+    </header>
     <p>抱歉，服务器出现了错误。请稍后再试。</p>
-    <a href="{{ url_for('devices.index') }}" class="primary-btn">返回首页</a>
-</div>
+    <footer>
+        <a href="{{ url_for('devices.index') }}" role="button">返回首页</a>
+    </footer>
+</article>
 {% endblock %}

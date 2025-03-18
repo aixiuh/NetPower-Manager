@@ -4,9 +4,13 @@
 {% block header %}404 - 页面未找到{% endblock %}
 
 {% block content %}
-<div class="error-container">
-    <h2>页面未找到</h2>
+<article class="container">
+    <header>
+        <h2>页面未找到</h2>
+    </header>
     <p>您请求的页面不存在或已被移动。</p>
-    <a href="{{ url_for('devices.index') }}" class="primary-btn">返回首页</a>
-</div>
+    <footer>
+        <a href="{{ url_for('devices.index') }}" role="button">返回首页</a>
+    </footer>
+</article>
 {% endblock %}

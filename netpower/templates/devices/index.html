@@ -3,145 +3,141 @@
 {% block title %}设备管理 - Wake on LAN{% endblock %}
 
 {% block content %}
-<div class="dashboard">
-    <div class="section-header">
-        <h2>添加设备</h2>
-        <button id="toggle-add-form" class="toggle-btn">
-            <span class="toggle-icon">+</span>
-        </button>
+<section id="add-device-section">
+    <div class="grid">
+        <div>
+            <h2>添加设备</h2>
+        </div>
+        <div style="text-align: right;">
+            <button id="toggle-add-form" class="outline secondary">
+                <span class="toggle-icon">+</span>
+            </button>
+        </div>
     </div>
 
-    <div class="add-device" id="add-device-form">
-        <form action="{{ url_for('devices.add_device') }}" method="post" id="add-form" data-validate="true">
-            <div class="form-grid">
-                <div class="form-group">
-                    <label for="name">名称</label>
+    <div id="add-device-form" style="display: none;">
+        <form action="{{ url_for('devices.add_device') }}" method="post" data-validate="true">
+            <div class="grid">
+                <label for="name">
+                    名称
                     <input type="text" name="name" required placeholder="输入设备名称">
-                </div>
-                <div class="form-group">
-                    <label for="mac">MAC地址</label>
+                </label>
+                
+                <label for="mac">
+                    MAC地址
                     <input type="text" name="mac" required placeholder="格式: 00:11:22:33:44:55">
-                </div>
-                <div class="form-group">
-                    <label for="ip">IP地址</label>
+                </label>
+                
+                <label for="ip">
+                    IP地址
                     <input type="text" name="ip" required placeholder="格式: 192.168.1.100">
-                </div>
-                <div class="form-group">
-                    <button type="submit" class="btn-primary">添加设备</button>
+                </label>
+                
+                <div>
+                    <button type="submit">添加设备</button>
                 </div>
             </div>
         </form>
     </div>
+</section>
 
-    <div class="section-header devices-header">
-        <h2>设备列表</h2>
-        <a href="{{ url_for('devices.refresh_status') }}" class="refresh-btn">
-            <span class="refresh-icon">⟳</span> 刷新状态
-        </a>
+<section id="device-list">
+    <div class="grid">
+        <div>
+            <h2>设备列表</h2>
+        </div>
+        <div style="text-align: right;">
+            <a href="{{ url_for('devices.refresh_status') }}" role="button" class="secondary outline">
+                ⟳ 刷新状态
+            </a>
+        </div>
     </div>
     
     {% if devices %}
-        <div class="device-grid">
-            {% for index in range(devices|length) %}
-                {% set device = devices[index] %}
-                <div class="device-card">
-                    <div class="device-card-header">
-                        <h3>{{ device.name }}</h3>
+        <div class="grid">
+            {% for index, device in enumerate(devices) %}
+                <article class="device-card">
+                    <header class="grid">
+                        <h3 style="margin: 0;">{{ device.name }}</h3>
                         <div class="status-badge {{ 'online' if device.status else 'offline' }}">
                             {{ '在线' if device.status else '离线' }}
                         </div>
-                    </div>
-                    <div class="device-card-body">
-                        <div class="device-info">
-                            <div class="info-item">
-                                <span class="info-label">MAC:</span>
-                                <span class="info-value">{{ device.mac }}</span>
-                            </div>
-                            <div class="info-item">
-                                <span class="info-label">IP:</span>
-                                <span class="info-value">{{ device.ip }}</span>
-                            </div>
-                        </div>
-                        <div class="device-actions">
-                            <a href="{{ url_for('devices.wake_up', device_id=index) }}" class="action-btn wake-btn" title="唤醒设备">
-                                <span class="btn-icon">▶</span> 唤醒
-                            </a>
-                            <a href="{{ url_for('devices.edit_device_page', device_id=index) }}" class="action-btn edit-btn" title="编辑设备">
-                                <span class="btn-icon">✎</span> 编辑
-                            </a>
-                            <button type="button" class="action-btn delete-btn" onclick="confirmDelete({{ index }})" title="删除设备">
-                                <span class="btn-icon">✕</span> 删除
-                            </button>
-                        </div>
-                    </div>
-                </div>
+                    </header>
+                    <p><strong>MAC:</strong> {{ device.mac }}</p>
+                    <p><strong>IP:</strong> {{ device.ip }}</p>
+                    <footer class="grid">
+                        <a href="{{ url_for('devices.wake_up', device_id=index) }}" 
+                           role="button" class="wake-btn" title="唤醒设备">
+                            唤醒
+                        </a>
+                        <a href="{{ url_for('devices.edit_device_page', device_id=index) }}" 
+                           role="button" class="edit-btn" title="编辑设备">
+                            编辑
+                        </a>
+                        <button class="delete-btn" onclick="confirmDelete({{ index }})" title="删除设备">
+                            删除
+                        </button>
+                    </footer>
+                </article>
             {% endfor %}
         </div>
     {% else %}
-        <div class="no-devices">
-            <div class="empty-state">
-                <div class="empty-icon">📦</div>
-                <p>没有设备。请添加设备开始使用。</p>
-            </div>
+        <div class="empty-state">
+            <article>
+                <header>没有设备</header>
+                <p>请添加设备开始使用。</p>
+            </article>
         </div>
     {% endif %}
-</div>
+</section>
 {% endblock %}
 
 {% block modals %}
-<div id="deleteModal" class="modal">
-    <div class="modal-content">
-        <div class="modal-header">
+<dialog id="deleteModal">
+    <article>
+        <header>
             <h3>确认删除</h3>
-            <span class="close-modal" onclick="closeModal()">&times;</span>
-        </div>
-        <div class="modal-body">
-            <p>您确定要删除这个设备吗？此操作不可撤销。</p>
-        </div>
-        <div class="modal-buttons">
-            <button class="cancel-btn" onclick="closeModal()">取消</button>
-            <a id="confirmDeleteLink" href="#"><button class="delete-btn">删除</button></a>
-        </div>
-    </div>
-</div>
+            <a href="#close" aria-label="Close" class="close" onclick="closeModal()"></a>
+        </header>
+        <p>您确定要删除这个设备吗？此操作不可撤销。</p>
+        <footer>
+            <a href="#cancel" role="button" class="secondary" onclick="closeModal()">取消</a>
+            <a id="confirmDeleteLink" href="#confirm" role="button" class="contrast">删除</a>
+        </footer>
+    </article>
+</dialog>
 {% endblock %}
 
 {% block scripts %}
 function confirmDelete(deviceId) {
-    var modal = document.getElementById('deleteModal');
-    var confirmLink = document.getElementById('confirmDeleteLink');
-    confirmLink.href = "{{ url_for('devices.delete_device', device_id=0) }}".replace("0", deviceId);
-    modal.style.display = "block";
+    const modal = document.getElementById('deleteModal');
+    document.getElementById('confirmDeleteLink').href = "{{ url_for('devices.delete_device', device_id=0) }}".replace("0", deviceId);
+    modal.showModal();
 }
 
 function closeModal() {
-    document.getElementById('deleteModal').style.display = "none";
+    document.getElementById('deleteModal').close();
 }
 
-window.onclick = function(event) {
-    var modal = document.getElementById('deleteModal');
-    if (event.target == modal) {
-        modal.style.display = "none";
-    }
-}
-
-// 切换添加设备表单显示/隐藏
-document.getElementById('toggle-add-form').addEventListener('click', function() {
-    var form = document.getElementById('add-device-form');
-    var icon = this.querySelector('.toggle-icon');
-    
-    if (form.classList.contains('expanded')) {
-        form.classList.remove('expanded');
-        icon.textContent = '+';
-    } else {
-        form.classList.add('expanded');
-        icon.textContent = '−';
-    }
-});
-
-// 页面加载时展开添加设备表单
+// 添加设备表单切换
 document.addEventListener('DOMContentLoaded', function() {
-    document.querySelector('.add-device').classList.add('expanded');
-    document.querySelector('.toggle-icon').textContent = '−';
+    const toggleBtn = document.getElementById('toggle-add-form');
+    const form = document.getElementById('add-device-form');
+    const icon = toggleBtn.querySelector('.toggle-icon');
+    
+    // 页面加载时展开表单
+    form.style.display = 'block';
+    icon.textContent = '−';
+    
+    // 切换表单显示/隐藏
+    toggleBtn.addEventListener('click', function() {
+        if (form.style.display === 'none') {
+            form.style.display = 'block';
+            icon.textContent = '−';
+        } else {
+            form.style.display = 'none';
+            icon.textContent = '+';
+        }
+    });
 });
 {% endblock %}
